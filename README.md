@@ -50,8 +50,8 @@ while len(s) < 25         //
 while len(s) < 50:        //
     s += ", hi"           //
                           //
-for i in 10..1:           //
-    puts(i + "...")       //
+for i in 10..1:           // `for`: alias of `while`
+    puts(i + "...")       // `while i in 10..1` is also valid
 puts("Go!")               //
 
 //////////////////////////// functions (hint: `self` or `self_[anything]` named args are mutables)
@@ -59,7 +59,7 @@ fn triple(n=1):           // optional args
     n*3                   // last stack value implicitly returned
 triple()                  // 3
 triple(5)                 // 15
-triple(.n=10)             // 30. named argument.
+triple(n=10)              // 30. named argument.
 copy = triple             // capture function
 copy(10)                  // also 30
 
@@ -76,13 +76,13 @@ string[-3]                // negative indexing from last element [-1] -> 'r'
 string < string           // comparison (<,>,==,!=)
 string + string           // concatenation -> "hello worldhello world"
 string - string           // removes all occurences of right string in left string -> ""
-.hash() .len() .del([:]) .find(ch) .rfind(ch) .starts(s) .ends(s) .split(s) .slice(i,j) .eval() f"{hi} {{1+2}}" .less()
+.hash() .len() .del([:]) .find(ch) .rfind(ch) .starts(s) .ends(s) .split(s) .slice(i,j) .eval() f"{hi} {{1+2}}" .less() .index() .print()
 
 //////////////////////////// lists (either vector or linked-list at vendor discretion)
 list = [2, 4, 6, 8]       //
 list[0]                   // positive indexing from first element [0] -> 2
 list[-2]=5                // negative indexing from last element [-1] -> list becomes [2,4,5,8]
-.len() .del([:]) .find(lst) .starts(lst) .ends(lst) .join(sep) .slice(i,j) .reverse() .shuffle()
+.len() .del([:]) .find(lst) .starts(lst) .ends(lst) .join(sep) .slice(i,j) .reverse() .shuffle() .index(k) .print()
 
 ///////////////////////////////// EXTENSIONS BELOW /////////////////////////////////////////////
 
@@ -91,7 +91,7 @@ map = {"a":1,'b':2,c:3}   // keys can be specified with different styles
 map.a                     // 1
 map->b                    // 2
 map["c"]                  // 3
-.len() .del([:]) .find(x) .keys(wc) .values(wc) .sort(op) .slice(i,j)
+.len() .del([:]) .find(x) .keys(wc) .values(wc) .sort(op) .slice(i,j) .index(k) .print()
 
 ///////////////////////////////////////////////// EXTENSION: classes
 // classes are maps with a special `isa`       //
@@ -113,15 +113,16 @@ x.degrees()                                    // 360
 
 ////////////////////////////////////// EXTENSION: extra control flow
 if a = 10; a < b: print(a)          //
-while a = 10; a < b: print(a)       //
-while a = 10; a < b; ++a: print(a)  //
+for a < b: print(a)                 // `while cond:` alias
+for a = 10; a < b: print(a)         // `while init;cond:` alias
+for a = 10; a < b; ++a: print(a)    // `while init[...];cond;step:` alias
 
 //////////////////////////////////// EXTENSION: casts
-int(val)                          // casts value to int as long as specialization exists
-bool(val)                         // casts value to bool as long as specialization exists
-char(val)                         // casts value to char as long as specialization exists
-float(val)                        // casts value to float as long as specialization exists
-string(val)                       // casts value to string as long as specialization exists
+int(val)                          // cast to int as long as specialization exists
+bool(val)                         // cast to bool as long as specialization exists
+char(val)                         // cast to char as long as specialization exists
+float(val)                        // cast to float as long as specialization exists
+string(val)                       // cast to string as long as specialization exists
 fn vec2(vec3 a): vec2(a.x,a.y)    // define a custom vec3->vec2 specialization
 vec2(v3)                          // vec3 objects can now be casted to vec2
 
@@ -149,14 +150,14 @@ string[-1:0]                 // "dlrow olleh"
 7..0..4                      // returns list of integers from i up to j (included) k steps each ->  [7,3,0]
 'A'..'Z'                     // returns list of chars from A up to Z (included)
 
-///////////////////////////// EXTENSION: in
-for i in -1..1: puts(i)    // returns iterator that walks lists,maps and objects -> -1 0 1
-for i in vec2: puts(i)     // iterates key/value pairs of object type -> "isa" "vec2" "x" 0 "y" 0
+////////////////////////////// EXTENSION: in
+for i in -1..1: print(i)    // returns iterator that walks lists,maps and objects -> -1 0 1
+for k,v in vec2: print(k,v) // iterate key/value pairs of given object type -> "isa" "vec2", "x" 0, "y" 0
 
 ////////////////////////// EXTENSION: lambdas
 i = 5                   //
-fn = def(n=1): i*2*n    //
-fn(10)                  // 100
+calc = fn(n=1): i*2*n   //
+calc(10)                // 100
 
 ///////////////////// EXTENSION: templates
 fn min(T a, T b):  // single-capital-letters will expand to different types when used
