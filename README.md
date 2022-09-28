@@ -13,76 +13,71 @@
 
 ## language
 ```python
-// min language spec (v1.0 wip - 2022.9)
+// min language spec (v1.00 wip - 2022.10)
 // - public domain.
 
-//////////////////////////// types
-'\x1' '\u1234'            // 32-bit char (ascii and utf8 notations)
-16 0x10                   // 53-bit integer (decimal and hexadecimal notations)
-16. 16.0 16.f             // 64-bit float (different notations)
-"16" '16'                 // string (both pairing quotes allowed)
-true false                // any matching condition, non-zero number or non-empty string/list/map evaluates to `true`; `false` otherwise
+/////////////////////////////////////////// operators
+& | ~ ^ ! << >>                          // bitwise
+< <= == != => > && ||                    // conditional, logical
++ - * ** / % ++ -- @ [] . ->             // arithmetical, indexing, member accessing (** for pow, [] or @ for indexing)
+= += -= *= **= /= %= &= |= ~= ^= <<= >>= // assignments
 
-//////////////////////////// operators
-+ - * ** / %              // arithmetical (** for pow)
-& | ~ ^ && || !           // bitwise and logical
+//////////////////////////// types
+'!' '\x1' '\u1234'        // 32-bit char (ascii, hexadecimal and utf notations)
+16  0x10                  // 53-bit integer (decimal and hexadecimal notations)
+16. 16.0  16.f            // 64-bit float (different notations)
+"16" '16'                 // string: both pairing quotes allowed
+true false                // bools: any mismatching condition, zero value or empty string/list/map eval to `false`; `true` otherwise
 
 //////////////////////////// statements
-statement()               // semi-colons at end of line are optional
-multiple(); statements()  // semi-colons separate statements within a line
+statement();              // semi-colons at end of line are optional
+multiple(); statements()  // semi-colons between statements within same line are mandatory
+{ more(); statements() }  // multi-line scopes use {braced scopes}
+: more(); statements()    // single-line scopes from colon `:` till end of line
 
 //////////////////////////// conditions
-if (2+2 >= 4):            // parentheses in conditions are optional
-    puts("Math works!")   //
-elif "a" < "b":           // unconstrained `else if` can also be used
-    puts("Sort strings")  // code blocks either use Python's indentation ':' as seen here,
-else {                    //
-    puts("Last chance")   // or, C's style '{}' as seen here.
-}                         //
-sign = PI < 0 ? -1 : +1   // ternary operator
+if(2+2 >= 4): put("Four") // parentheses in expressions are optional
+elif "a"<"b": put("Sort") // unconstrained `else if` could also be used
+else {put("Last resort")} // notice that classic {braced scopes} can also be used
+                          //
+sign = PI > 0 ? +1 : -1   // ternary operator `expr ? ... : ...`
 
 //////////////////////////// loops
-s = "Hello"               // any loop construction can use `break` and `continue` for control flow
-do:                       //
-    s += ", hi"           //
-while len(s) < 25         //
+s = "Hello"               //
+while len(s) < 25: s+="!" // `while(expr) ...`
                           //
-while len(s) < 50:        //
-    s += ", hi"           //
-                          //
-for i in 10..1:           // `for`: alias of `while`
-    puts(i + "...")       // `while i in 10..1` is also valid
-puts("Go!")               //
+do { s += "Hi!" }         // `do ... while(expr)`
+while len(s) < 50         // loops may use `break`/`continue`/`return` to alter flow
 
 //////////////////////////// functions (hint: `self` or `self_[anything]` named args are mutables)
-fn triple(n=1):           // optional args
-    n*3                   // last stack value implicitly returned
+triple(n=1): n*3          // optional arg `n`. optional `return` keyword; last stack value implicitly returned
 triple()                  // 3
 triple(5)                 // 15
-triple(n=10)              // 30. named argument.
+triple(n=10)              // 30. named argument
 copy = triple             // capture function
 copy(10)                  // also 30
 
 //////////////////////////// unified call syntax
 len("hi"); "hi".len()     // these two calls are equivalent...
-add(s1,s2); s1.add(s2)    // ...so are these two.
-s1.add(s2).add(s3)        // which allows chaining
+add(s1,s2); s1.add(s2)    // ...so these two as well
+s1.add(s2).add(s3)        // UCS allows chaining
 
 //////////////////////////// strings
 hi='hello'                // strings can use "quotes" or 'quotes' at your discretion
-string=f"{hi} world"      // f-interpolated string -> 'hello world'
-string[2]                 // positive indexing from first element [0] -> 'e'
-string[-3]                // negative indexing from last element [-1] -> 'r'
+string=f"{hi} world"      // "hello world". f-interpolated string
+string[1]                 // 'e'. positive indexing from first element [0]
+string[-3]                // 'r'. negative indexing from last element [-1]
 string < string           // comparison (<,>,==,!=)
-string + string           // concatenation -> "hello worldhello world"
-string - string           // removes all occurences of right string in left string -> ""
-.hash() .len() .del([:]) .find(ch) .rfind(ch) .starts(s) .ends(s) .split(s) .slice(i,j) .eval() f"{hi} {{1+2}}" .less() .index() .print()
+string + string           // "hello worldhello world". concatenation
+string - string           // "". removes all occurences of right string in left string
+.hash() .len() .less() .index() .put() .quote() .assert()
+.pop() .back() .del([:]) .find(ch) .rfind(ch) .starts(s) .ends(s) .split(s) .slice(i,j)
 
 //////////////////////////// lists (either vector or linked-list at vendor discretion)
 list = [2, 4, 6, 8]       //
-list[0]                   // positive indexing from first element [0] -> 2
-list[-2]=5                // negative indexing from last element [-1] -> list becomes [2,4,5,8]
-.len() .del([:]) .find(lst) .starts(lst) .ends(lst) .join(sep) .slice(i,j) .reverse() .shuffle() .index(k) .print()
+list[0]                   // 2. positive indexing from first element [0]
+list[-2]=5                // [2,4,5,8]. negative indexing from last element [-1]
+.len() .del([:]) .find(lst) .starts(lst) .ends(lst) .join(sep) .slice(i,j[,k]) .reverse() .shuffle() .index(i) .put()
 
 ///////////////////////////////// EXTENSIONS BELOW /////////////////////////////////////////////
 
@@ -91,17 +86,17 @@ map = {"a":1,'b':2,c:3}   // keys can be specified with different styles
 map.a                     // 1
 map->b                    // 2
 map["c"]                  // 3
-.len() .del([:]) .find(x) .keys(wc) .values(wc) .sort(op) .slice(i,j) .index(k) .print()
+.len() .del([:]) .find(x) .keys(wc) .values(wc) .sort(op) .slice(i,j) .index(k) .put()
 
 ///////////////////////////////////////////////// EXTENSION: classes
-// classes are maps with a special `isa`       //
-// entry that points to the parent class and   //
-// is set automatically at instance time.      //
+// classes are maps with a special `isa` entry //
+// that points to the parent class and is set  //
+// automatically at instance time.             //
 /////////////////////////////////////////////////
 Shape = { sides: 0 }                           // plain data struct. methods below:
-fn Shape(Shape self, n=1): self.sides=n        // constructor
-fn ~Shape(Shape self):                         // destructor
-fn degrees(Shape self): self.sides*180-360     // method
+Shape(Shape self, n=1): self.sides=n           // constructor
+~Shape(Shape self):                            // destructor
+degrees(Shape self): self.sides*180-360        // method
 // instance base class //////////////////////////
 Square = Shape(4)                              //
 Square.isa                                     // "Shape"
@@ -111,68 +106,83 @@ x = Square()                                   //
 x.isa                                          // "Square"
 x.degrees()                                    // 360
 
-////////////////////////////////////// EXTENSION: extra control flow
-if a = 10; a < b: print(a)          //
-for a < b: print(a)                 // `while cond:` alias
-for a = 10; a < b: print(a)         // `while init;cond:` alias
-for a = 10; a < b; ++a: print(a)    // `while init[...];cond;step:` alias
+/////////////////////////////////// EXTENSION: extended if/while conditionals
+if a = 10; a < b: put(a)         // `init[...]; if cond:` alias
+while a = 10; a < b: put(a)      // `init[...]; while cond:` alias
 
-//////////////////////////////////// EXTENSION: casts
-int(val)                          // cast to int as long as specialization exists
-bool(val)                         // cast to bool as long as specialization exists
-char(val)                         // cast to char as long as specialization exists
-float(val)                        // cast to float as long as specialization exists
-string(val)                       // cast to string as long as specialization exists
-fn vec2(vec3 a): vec2(a.x,a.y)    // define a custom vec3->vec2 specialization
-vec2(v3)                          // vec3 objects can now be casted to vec2
+/////////////////////////////////// EXTENSION: for
+for a = 10; a < b; ++a: put(a)   // `init[...]; while cond: {code;post}` alias
+for i in 10..1: put(i + "...")   //
 
-////////////////////////////////// EXTENSION: match
-match var {                     //
-    1: print('one')             //
-    1..99: print('a number')    //
-    'a'..'z': print('a letter') //
-}                               //
+/////////////////////////////////// EXTENSION: casts
+int(val)                         // cast value to int. only if specialization exists
+bool(val)                        // cast value to bool. only if specialization exists
+char(val)                        // cast value to char. only if specialization exists
+float(val)                       // cast value to float. only if specialization exists
+string(val)                      // cast value to string. only if specialization exists
+vec2(vec3 a) { vec2(a.x,a.y) }   // define a custom vec3->vec2 specialization
+vec2(v3)                         // vec3 to vec2 casting is allowed now
+
+/////////////////////////////////// EXTENSION: match
+match var {                      //
+    1: put('one')                //
+    1..99: put('number')         //
+    'a'..'z': put('letter')      //
+}                                //
+
+/////////////////////////////////// EXTENSION: exceptions
+throw("my exception message")    // `throw(value)`, `thrown` keywords
+msg = try(fn(x)) ? "ok" : thrown // `try(expression)` returns `true` if no exceptions were thrown; `false` otherwise
 
 /////////////////////////////// EXTENSION: set theory
-list+list or map+map         // union [1,2]+[2,3]=[1,2,3]
-list-list or map-map         // difference [1,2]-[2,3]=[1]
-list^list or map^map         // intersection [1,2]^[2,3]=[2]
+list+list or map+map         // union [1,2]+[2,3] -> [1,2,3]
+list-list or map-map         // difference [1,2]-[2,3] -> [1]
+list^list or map^map         // intersection [1,2]^[2,3] -> [2]
 
-/////////////////////////////// EXTENSION: slices [i:j] both `i` and `j` are optional
-list[-1:1]                   // slices [i:j] from i up to j (included). defaults to [0:-1] -> [8,5,4]
-map["b":"a"]                 // slices [i:j] from i up to j (included). defaults to [first_key:last_key] -> {b:2,a:1}
-string[7:9]                  // slices [i:j] from i up to j (included). defaults to [0:-1] -> "wo"
+/////////////////////////////// EXTENSION: slices [i:j] `i,j` are optional
+map["b":"a"]                 // {b:2,a:1}. slices [i:j] from i up to j (included). defaults to [first_key:last_key]
+list[-1:1]                   // [8,5,4].   slices [i:j] from i up to j (included). defaults to [0:-1]
+string[7:9]                  // "wo".      slices [i:j] from i up to j (included). defaults to [0:-1]
 string[7:]                   // "world"
 string[-1:0]                 // "dlrow olleh"
 
-/////////////////////////////// EXTENSION: ranges [i:j] and [i:j:k] `i`,`j` and/or `k` are mandatory
-4..0                         // returns list of integers from i up to j (included) -> [4,3,2,1,0]
-7..0..4                      // returns list of integers from i up to j (included) k steps each ->  [7,3,0]
-'A'..'Z'                     // returns list of chars from A up to Z (included)
+/////////////////////////////// EXTENSION: ranges [i..j[..k]]
+3..0                         // [3,2,1,0]. returns list of integers from 3 up to 0 (included)
+7..0..3                      // [7,4,1,0]. returns list of integers from 7 up to 0 (included) 3 steps each
+'A'..'D'                     // [A,B,C,D]. returns list of chars from A up to D (included)
 
-////////////////////////////// EXTENSION: in
-for i in -1..1: print(i)    // returns iterator that walks lists,maps and objects -> -1 0 1
-for k,v in vec2: print(k,v) // iterate key/value pairs of given object type -> "isa" "vec2", "x" 0, "y" 0
+//////////////////////////// EXTENSION: in
+for i in -1..1: put(i)    // returns iterator that walks lists,maps and objects -> -1 0 1
+for k,v in vec2: put(k,v) // iterate key/value pairs of given object type -> "isa""vec2" "x"0 "y"0
+                          // `while i in 10..1` is also valid
 
 ////////////////////////// EXTENSION: lambdas
-i = 5                   //
-calc = fn(n=1): i*2*n   //
-calc(10)                // 100
+mul = 5                 //
+calc = fn(n): n*mul     // `fn` keyword denotes a following lambda function
+calc(10)                // 50
+
+/////////////////////// EXTENSION: eval
+eval("1+2")          // 3
+put(f"{1+2}==3")     // "3==3". any {moustache} in a f-string redirects to an internal `eval` operator call
 
 ///////////////////// EXTENSION: templates
 fn min(T a, T b):  // single-capital-letters will expand to different types when used
     a < b ? a : b  //
 
+/////////////// EXTENSION: dlsym
+sin(3.14159) // foreign calls are implicitly passed to underlying runtime via `dlsym()` call
+
 ////////////// EXTENSION: typeof
 typeof(3.0) // "float"
 typeof(v2)  // "vec2"
 
+////////////////////////////////////////////
 // preprocessor and pragmas: @todoc
 // ffi and C abi convention: @todoc
 // constness, symbol visibility: @todoc
-// embedding, calling from/to C: @todoc func = sym("my_dll", "int my_func(void)"); puts(func())
-// std modules: math.h, string.h, stdio.h @todoc
+// embedding, calling from/to C: @todoc func = dlsym("int puts(const char *)@my_dll"); put(func)
+// std modules: matching math.h, string.h, stdio.h @todoc
 // match: see rust
-// keywords: true/false if/elif/else for/in/do/while break/continue fn typeof/isa @todoc
-// modules: puts("once") ; return fn(x) { ... } --- x = import('file.src', 'init')
+// keywords: true/false if/elif/else for/in/do/while break/continue/return fn isa @todoc
+// modules: put("once") ; return fn(x) { ... } --- x = import('file.src', 'init args'...)
 ```

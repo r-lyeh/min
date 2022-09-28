@@ -1,0 +1,409 @@
+// comments
+/*c*/1//c++
+//c++ /*c*/
+
+// syntax errors
+(
+)
+[
+]
+{
+}
+()
+[]
+{}
+([)
+({[)
+{([})
+
+// functions
+test(1)
+test/*c*/(/*c*/1/*c*/)
+
+// preprocessor multi-line
+test( \
+true )
+
+// values
+test('@' == 64 )
+test('\x20' == ' ')
+test('\u21' == '!')
+test(101 == 101)
+test(0x65 == 101)
+test(101.0 == 101)
+test(101.f == 101)
+test(101. == 101)
+test(1e2 == 100)
+test(.5 == 0.5)
+
+// strings
+test('hello'=="hello")
+test(".101 " == '.101 ')
+
+// assignments
+a=100
+test(a==100)
+hi="hello"
+test(hi=="hello")
+pi=3.14159
+test(pi<3.2)
+
+// statements (comma, semi-colon, {braces}, :\n)
+a=99, b=199;                  test(a==99);  test(b=199)
+a=100; b=200; c=300;          test(a==100); test(b=200); test(c==300);
+{ a=101; b=201; c=301 }       test(a==101); test(b=201); test(c==301);
+{ a=102; {b=202; { c=302 }}}  test(a==102); test(b=202); test(c==302);
+{{{ a=103; } b=203; } c=303 } test(a==103); test(b=203); test(c==303);
+:a=104;b=204;c=304;           test(a==104); test(b=204); test(c==304);
+// {1}2
+// 1{2}3 1{2;3}
+// 1{2} vs {1{2}} vs {1{;2}} vs {1;{2}}
+// 1 2 vs 1;2 vs {1;2} vs 1;2; vs ;1 2; vs ;1 ;2 vs 1; 2; vs ;1;;2; vs ;1 2
+//   vs {1;2;} vs {1 2;}
+// {1 2} {;1 2}                     // 1 \n 2
+// {1{2;3}{4{5}}
+
+// f-interpolated strings
+a=100, b=101;
+test( f"{a} is 100" == '100 is 100' )
+test( f"{a} is {a}" == '100 is 100' )
+test( f"{a} is not {x}{b}" == '100 is not {x}101' )
+name1="John", name2="Doe", test( "Hello JohnDoe" == f"Hello {name1}{name2}" )
+test(f'{PI} is 3.14159' == '3.14159 is 3.14159')
+test(f'PI*2 is {PI*2}' == 'PI*2 is 6.28319')
+
+// builtins
+test( len(true) == 1)
+test( len('\x20') == 4)
+test( len(3) == 8)
+test( len(3.0) == 8)
+test( len("hello world") == 11)
+test( hash("") == 0)
+test( hash("hello world") == 0x1a65e7023cd2e7)
+test( hash("hello wor1d") == 0xf67e7034325ba)
+test( string(true) == "true")
+test( bool("") == 0)
+test( bool("x") == 1)
+test( bool([]) == 0)
+test( bool([1]) == 1)
+test( len("hi") == 2)
+test( index("hi", -3) == 'i')
+test( bool("hi") == true)
+test( char("hi") == 'h')
+test( int("10") == 10)
+test( float(".3") == .3)
+test( "3".float() == 3)
+test( '3'.float() == 51) // char, not string
+test( string(100) == "100")
+test( quote("hi") == '"hi"')
+test( assert("hi") == true)
+test( hash("hi") != 0)
+test( test("hi") == true)
+test( string(10) == "10" )
+test( string((9+1)**4) == "10000" )
+test( string(PI) == f"{PI}" )
+
+// UCS
+1.test()
+2->test()
+test(index("hi",2) == 'h')
+test(index(["hi",2]) == 'h')
+test(["hi",2].index() == 'h')
+test("hi".index(2) == 'h')
+100;test("hi".index(2) == 'h')
+test(len("hello") == 5)
+test("hello".len() == 5)
+test("hello"->len() == 5)
+test(index("hello", 0) == 'h')
+test("hello".index(0) == 'h')
+test("hello"->index(0) == 'h')
+test(len([1,2]) == 2)
+test([1,2].len() == 2)
+test([1,2]->len() == 2)
+test( string(10).len() == 2 )
+test( "hi"[3].len() == 4 )
+test( "hi".index(-3) == 'i')
+
+// indexing
+test(hi[0] == 'h')
+test(hi[1] == 'e')
+test(hi[2] == 'l')
+test(hi[3] == 'l')
+test(hi[4] == 'o')
+test(hi[5] == 'h')
+
+test(hi[-6] == 'o')
+test(hi[-5] == 'h')
+test(hi[-4] == 'e')
+test(hi[-3] == 'l')
+test(hi[-2] == 'l')
+test(hi[-1] == 'o')
+
+test( "hello"[1] == 'e' )
+test( ("hello")[1] == 'e' )
+test( (("hello"))[1] == 'e' )
+test( "hello"@3 == 'l' )
+test( ("hello")@3 == 'l' )
+test( (("hello"))@3 == 'l' )
+//test( "hello"@-1 == 'o' ) // @fixme
+
+// lists
+a = [1,2,3]
+test( [1,2,3] == [1,2,3] )
+test( a.len() == 3 )
+test( [1,2,3].len() == 3 )
+test( [1,2]==[1,2] )
+test( string([]) == "[]" )
+test( string(['a']) == "[a]" )
+test( string([true]) == "[true]" )
+test( string(["hello".len()]) == "[5]" )
+test( string([1]) == "[1]" )
+test( string([1,2]) == "[1,2]" )
+test( string([1,2,3]) == "[1,2,3]" )
+test( len([1,2,3]) == 3 )
+test( [-100].string() == "[-100]" )
+test( [-100,-100].string() == "[-100,-100]" )
+test( [10,20].string() == "[10,20]" )
+test( (10,20).string() == "[10,20]" )
+test( [1,2].string() == string([1,2]) )
+test( (a=1, b=2).string() == [1,2].string() ); test(a==1); test(b==2); test(a==1 && b==2)
+test( [10,20,30][1] == ([10,20,30])[1] ); test( [10,20,30][1] == 20 )
+
+// tuples
+test( (1+1+1,5).string() == "[3,5]" )
+a=[3,4,5]; test( a[1] == 4 ); test( a@1 == 4 ); test( (a)[1] == 4); test( (a)@1 == 4)
+a=(3,4,5); test( a[1] == 4 ); test( a@1 == 4 ); test( (a)[1] == 4); test( (a)@1 == 4)
+
+// list indexing
+test(a[0] == 3)
+test(a[1] == 4)
+test(a[2] == 5)
+test(a[3] == 3)
+test(a[-1] == 5)
+test(a[-2] == 4)
+test(a[-3] == 3)
+test(a[-4] == 5)
+
+// ranges
+test(1..10 == [1,2,3,4,5,6,7,8,9,10])
+test(1..10..3 == [1,4,7,10])
+test(-1..-10 == [-1,-2,-3,-4,-5,-6,-7,-8,-9,-10])
+test( 1..3.string() == "[1,2,3]")
+test( -1..3.string() == "[-1,0,1,2,3]")
+test( 1..-3.string() == "[1,0,-1,-2,-3]")
+test( -1..-3.string() == "[-1,-2,-3]")
+test( 1..7..4.string() == "[1,5,7]")
+test( 7..1.string() == "[7,6,5,4,3,2,1]")
+test( 7..1..4.string() == "[7,3,1]")
+//test( 'A'..'C'.string() == "[A,B,C]") // @todo
+test( (0..10).string() == "[0,1,2,3,4,5,6,7,8,9,10]" )
+test( [0..10].string() == "[0,1,2,3,4,5,6,7,8,9,10]" )
+test( [0..10..7].string() == "[0,7,10]" )
+test( [0..10,11,12].string() == "[0,1,2,3,4,5,6,7,8,9,10,11,12]" )
+
+// conditions
+a=100
+test( 1 < 2 )
+test( 2 > 1 )
+test( 1 == 1 )
+test( 1 != 0 )
+test( a <= 100 )
+test( a == 100 )
+test( a >= 100 )
+test( a < 101 )
+test( a > 99 )
+test( b = 100 )
+test( a == b )
+test( a != b+1 )
+test( c = 101 )
+test( a == c-1 )
+test( a != c )
+test( !0 )
+test( !!1 )
+test( 1 < 2 )
+test( 2 > 1 )
+test( 1 <= 2 )
+test( 2 >= 1 )
+test( 2 <= 2 )
+test( 2 >= 2 )
+test( 2 == 2 )
+test( 1 != 2 )
+
+// operators
+test( 1+2 == 3 )
+test( 3-1 == 2 )
+test( 2*3 == 6 )
+test( 2**3 == 8 )
+test( 1+2**3 == 9 )
+test( 1*2+3*4 == 14 )
+test( 1-1-1 == -1 )
+test( 1-3+4 == 2 )
+test( 8/2 == 4 )
+test( 9%2 == 1 )
+test( 100|2 == 102 )
+test( 0xFF&0x1F == 0x1F )
+test( 0xF0|0x1F == 0xFF )
+test( !102 == 0 )
+test( !0 == 1 )
+test( 1^1 == 0 )
+test( 0^1 == 1 )
+test( ~0 == -1 )
+test( ~100 == -101 )
+test( (a=100) == 100 )
+test( a == 100 )
+test( (a+=2) == 102 )
+test( (a-=2) == 100 )
+test( (a*=2) == 200 )
+test( (a/=2) == 100 )
+test( (a%=5) == 0 )
+test( (1<2?100:200) == 100 )
+test( (1>2?100:200) == 200 )
+test( (10+(20)+30) == 60 )
+test( (1+2==3) == true )
+test( (3==1+2) == true )
+test( (1+1) == 2 )
+test( (-10-2) == -12 )
+test( (-10+2) == -8 )
+test( (-(10-2)) == -8 )
+test( (-(10+2)) == -12 )
+test( (1*2+3*4) == 14 )
+test( (1+2**3) == 9 )
+test( (2**3+1) == 9 )
+
+// unary operators
+test( +100 == 100 )
+test( -100 == 0-100 )
+test( !100 == 0 )
+test( !0 == 1 )
+test( !1 == 0 )
+test( ~100 == -101 )
+
+// arithmetical operators
+test( 1+1 == 2)
+test( 1+1+1 == 3)
+test( -1-1 == -2)
+test( -1-1-1 == -3)
+test( 2+3*4 == 14)
+test( 2+3*4+5 == 19)
+test( 2**3+1 == 9)
+test( 1+2**3 == 9)
+test( 100/4 == 25)
+test( 101%4 == 1)
+
+// bitwise operators
+test( 100<<1==200 )
+test( 200>>1==100 )
+test( 0xFF&0x1F==31 )
+test( 0xF0|0x1F==255 )
+test( 1^1==0 )
+test( 0^0==0 )
+test( 0^1==1 )
+
+// assign operators: += -= *= /= %= &= |= ^= <<= >>= **=
+a=100;   test(a == 100)
+a+=10;   test(a == 110)
+a+=-10;  test(a == 100)
+a-=-10;  test(a == 110)
+a-=+10;  test(a == 100)
+a=10-3;  test(a == 7)
+a=1+1+1; test(a == 3)
+
+// relational operators: < > == != >= <= && ||
+
+// string operators: + - < <= == != >= >  @todo lists, maps
+test( "hi"+"ho" == "hiho" )
+test( "hiii"-"i"+"o" == "ho" )
+test( "hi" == "hi" )
+test( "hi" != "ho" )
+
+// pre/post inc/decrements
+a=100
+test( --a == 99 );	 test( a == 99 )
+test( --a == 98 );	 test( a == 98 )
+test( ++a == 99 );	 test( a == 99 )
+test( ++a == 100);	 test( a == 100)
+test( a-- == 100);	 test( a == 99)
+test( a++ == 99);	 test( a == 100)
+
+// ternary operator: ?:
+test((1+3<5?7:9)==7)
+test((1+3>5?7:9)==9)
+
+// infix assignments
+sin(a=1+2**3); test(a==9)
+cos(b=PI*2);   test(b==PI+PI)
+
+// misc
+r="hello";     test( r[0].len() == 'c'.len() )
+r="hello";     test( (1+(2&len(3,4+5*6))+7,8,r[1+r[1*2]*3*(4+5)]).string() == "[10,8,l]" )
+
+// variadic calls
+test(len(1) == 8)
+test(len(1,'2') == 2)
+test(len(1,'2',3.0) == 3)
+
+// ffi calls: imported C functions
+test(puts)
+test((sin(PI)*sin(PI)+cos(PI)*cos(PI)) == 1)
+
+// extensions
+test( eval("2*3")==6 )
+test( typeof('3') == "CHAR") // @fixme CHR
+test( typeof("3") == "STR")
+test( typeof(3) == "NUM") // @fixme INT
+test( typeof(3.0) == "NUM") // @fixme FLT
+
+// branches @todo
+a=0; test(a==0); if(1<2){a=100};                                test(a==100)
+a=0; test(a==0); if(1<2){a=100} else {a=200}                    test(a==100)
+a=0; test(a==0); if(1<2){a=100} elif(3<4) {a=200}               test(a==100)
+a=0; test(a==0); if(1<2){a=100} elif(3<4) {a=200} else {a=300}  test(a==100)
+a=0; test(a==0); if(1<2){a=100} elif(3>4) {a=200}               test(a==100)
+a=0; test(a==0); if(1<2){a=100} elif(3>4) {a=200} else {a=300}  test(a==100)
+
+a=0; test(a==0); if(1>2){a=100};                                test(a==0)
+a=0; test(a==0); if(1>2){a=100} else {a=200}                    test(a==200)
+a=0; test(a==0); if(1>2){a=100} elif(3<4) {a=200}               test(a==200)
+a=0; test(a==0); if(1>2){a=100} elif(3<4) {a=200} else {a=300}  test(a==200)
+a=0; test(a==0); if(1>2){a=100} elif(3>4) {a=200}               test(a==0)
+a=0; test(a==0); if(1>2){a=100} elif(3>4) {a=200} else {a=300}  test(a==300)
+
+a=0; test(a==0); if(1>2){a=100} elif(3>4) {a=200} elif(5>6) {a=300}               test(a==0)
+a=0; test(a==0); if(1>2){a=100} elif(3>4) {a=200} elif(5>6) {a=300} else {a=400}  test(a==400)
+
+// {if(1<2)100+50;else 200{if(2<3)300;else 400{put(('j'));put((('k')));for(0;1;2) '3';}}}
+// if(1+(1))2+3*put(1); elif true: 200/**/+ 300 else {400+500;600{700;if(1)2+3}};4
+// if 1+(1)<0: 2+3 else 3+4*5
+
+// do/while loops @todo
+a = 3; test(a==3); while(a--) a;             test(a==-1);
+a = 3; test(a==3); while(a<10) ++a;          test(a==10);
+a = 3; test(a==3); do { a++; } while(a!=10); test(a==10);
+a = 3; test(a==3); do { --a; } while(a);     test(a==0);
+
+// for loops @todo
+for i in 10..1: put(i)
+for i in 10..1..3: put(i)
+
+// functions
+copy = len; test(copy == len); test(copy("hello from copy") == len("hello from copy"))
+
+// functions @todo
+simple(n=0) {
+	nested(n) {
+		put(n)
+	}
+	nested(n)
+}
+simple(1)
+simple(n=2)
+simple(123)
+simple("hello")
+
+fib(n) {
+	n < 2 ? n : fib(n-1) + fib(n-2)
+}
+
+fib(n): n < 2 ? n : fib(n-1) + fib(n-2)
+
+//put(fib(10))
